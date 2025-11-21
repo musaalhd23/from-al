@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Girlfriend?</title>
+    <style>
+        body {
+            font-family: 'Dancing Script', cursive;
+            background: linear-gradient(to bottom, #ffb6c1, #ff69b4);
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .page {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            max-width: 600px;
+            width: 100%;
+        }
+        .page.active {
+            display: block;
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        button {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5em;
+            padding: 15px 30px;
+            margin: 10px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        #yesBtn {
+            background: #ff1493;
+            color: white;
+        }
+        #yesBtn:hover {
+            background: #ff69b4;
+        }
+        #noBtn {
+            background: #dc143c;
+            color: white;
+            position: absolute;
+        }
+        #noBtn:hover {
+            background: #b22222;
+        }
+        .date-picker, .time-picker {
+            margin: 20px 0;
+        }
+        input[type="date"], input[type="time"] {
+            font-size: 1.2em;
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.8);
+            color: #333;
+            padding: 20px;
+            border-radius: 20px;
+            margin: 20px auto;
+            max-width: 400px;
+        }
+        .heart {
+            position: absolute;
+            font-size: 2em;
+            color: #ff1493;
+            pointer-events: none;
+            animation: float 2s ease-out forwards;
+        }
+        @keyframes float {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-50px); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Page 1: Ask to be girlfriend -->
+    <div id="page1" class="page active">
+        <h1>Will You Be My Girlfriend? 💖</h1>
+        <button id="yesBtn">Yes I do</button>
+        <button id="noBtn">No, leave me alone</button>
+    </div>
+
+    <!-- Page 2: Schedule date -->
+    <div id="page2" class="page">
+        <h1>Let's Schedule Our First Date! 🌹</h1>
+        <div class="date-picker">
+            <label for="date">Pick a Date:</label><br>
+            <input type="date" id="date">
+        </div>
+        <div class="time-picker">
+            <label for="time">Pick a Time:</label><br>
+            <input type="time" id="time">
+        </div>
+        <button id="continueBtn">Continue</button>
+    </div>
+
+    <!-- Page 3: Date summary -->
+    <div id="page3" class="page">
+        <h1>Our Date is Set! 💕</h1>
+        <div class="card" id="dateCard">
+            <!-- Content will be populated by JS -->
+        </div>
+    </div>
+
+    <script>
+        // Page navigation
+        const pages = document.querySelectorAll('.page');
+        let currentPage = 1;
+
+        document.getElementById('yesBtn').addEventListener('click', () => showPage(2));
+        document.getElementById('continueBtn').addEventListener('click', () => {
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+            if (date && time) {
+                showPage(3);
+                displayDateCard(date, time);
+            } else {
+                alert('Please fill in all fields!');
+            }
+        });
+
+        function showPage(pageNum) {
+            pages.forEach(page => page.classList.remove('active'));
+            document.getElementById(`page${pageNum}`).classList.add('active');
+            currentPage = pageNum;
+        }
+
+        // Display date card
+        function displayDateCard(date, time) {
+            document.getElementById('dateCard').innerHTML = `
+                <h2>Date: ${date}</h2>
+                <h2>Time: ${time}</h2>
+                <p>Can't wait! ❤️</p>
+            `;
+        }
+
+        // "No" button teleportation
+        const noBtn = document.getElementById('noBtn');
+        noBtn.addEventListener('mouseenter', () => {
+            const maxX = window.innerWidth - noBtn.offsetWidth;
+            const maxY = window.innerHeight - noBtn.offsetHeight;
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
+            noBtn.style.left = `${randomX}px`;
+            noBtn.style.top = `${randomY}px`;
+        });
+
+        // Hearts trail animation
+        document.addEventListener('mousemove', (e) => {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.textContent = '💖';
+            heart.style.left = `${e.pageX}px`;
+            heart.style.top = `${e.pageY}px`;
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 2000);
+        });
+    </script>
+</body>
+</html>
